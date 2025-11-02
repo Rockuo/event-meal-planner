@@ -1,18 +1,18 @@
-import * as queries from "./queries";
-import * as mutations from "./mutations";
-import * as types from "./types";
+import * as queries from './queries'
+import * as mutations from './mutations'
+import * as types from './types'
 
 const queryTypeDefs = Object.values(queries)
-    .map((query: any) => query.typeDef)
-    .join('\n');
+    .map((query: { typeDef: string }) => query.typeDef)
+    .join('\n')
 
 const mutationTypeDefs = Object.values(mutations)
-    .map((mutation: any) => mutation.typeDef)
-    .join('\n');
+    .map((mutation: { typeDef: string }) => mutation.typeDef)
+    .join('\n')
 
 const customTypesDefs = Object.values(types)
-    .map((type: any) => type)
-    .join('\n');
+    .map((type: string) => type)
+    .join('\n')
 
 export const typeDefs = `#graphql
   ${customTypesDefs}
@@ -24,4 +24,4 @@ export const typeDefs = `#graphql
   type Mutation {
     ${mutationTypeDefs}
   }
-`;
+`

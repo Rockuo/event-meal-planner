@@ -1,16 +1,21 @@
-'use client';
-import React, { useState } from 'react';
-import Button from '@/components/Button';
-import { useRouter } from 'next/navigation';
-import { useMutation } from '@apollo/client/react';
-import Cookies from 'js-cookie';
-import { gql } from '@/app/graphql/generated';
-import { LoginMutation, LoginMutationVariables, RegisterMutation, RegisterMutationVariables } from '@/app/graphql/generated/graphql';
+'use client'
+import React, { useState } from 'react'
+import Button from '@/components/Button'
+import { useRouter } from 'next/navigation'
+import { useMutation } from '@apollo/client/react'
+import Cookies from 'js-cookie'
+import { gql } from '@/app/graphql/generated'
+import {
+    LoginMutation,
+    LoginMutationVariables,
+    RegisterMutation,
+    RegisterMutationVariables,
+} from '@/app/graphql/generated/graphql'
 
 const LoginForm: React.FC<{
-    onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-    loading: boolean;
-    error: string | null;
+    onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
+    loading: boolean
+    error: string | null
 }> = ({ onSubmit, loading, error }) => (
     <form className="space-y-6" onSubmit={onSubmit}>
         <div>
@@ -53,12 +58,12 @@ const LoginForm: React.FC<{
             </Button>
         </div>
     </form>
-);
+)
 
 const RegisterForm: React.FC<{
-    onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-    loading: boolean;
-    error: string | null;
+    onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
+    loading: boolean
+    error: string | null
 }> = ({ onSubmit, loading, error }) => (
     <form className="space-y-6" onSubmit={onSubmit}>
         <div>
@@ -98,75 +103,82 @@ const RegisterForm: React.FC<{
             </Button>
         </div>
     </form>
-);
+)
 
 const LOGIN_MUTATION = gql(`
     mutation Login($password: String!, $email: String!) {
         login(password: $password, email: $email)
     }
-`);
+`)
 const REGISTER_MUTATION = gql(`
     mutation Register($password: String!, $email: String!) {
         register(password: $password, email: $email)
     }
-`);
+`)
 
 const LoginPage: React.FC = () => {
-    const [isLoginView, setIsLoginView] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const router = useRouter();
+    const [isLoginView, setIsLoginView] = useState(true)
+    const [error, setError] = useState<string | null>(null)
+    const router = useRouter()
 
-    const [login, { loading: loginLoading }] = useMutation<LoginMutation, LoginMutationVariables>(LOGIN_MUTATION);
-    const [register, { loading: registerLoading }] = useMutation<RegisterMutation, RegisterMutationVariables>(REGISTER_MUTATION);
+    const [login, { loading: loginLoading }] = useMutation<LoginMutation, LoginMutationVariables>(LOGIN_MUTATION)
+    const [register, { loading: registerLoading }] = useMutation<RegisterMutation, RegisterMutationVariables>(
+        REGISTER_MUTATION,
+    )
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setError(null);
-        const formData = new FormData(e.currentTarget);
-        const email = formData.get('email') as string;
-        const password = formData.get('password') as string;
+        e.preventDefault()
+        setError(null)
+        const formData = new FormData(e.currentTarget)
+        const email = formData.get('email') as string
+        const password = formData.get('password') as string
 
         try {
-            const result = await login({ variables: { email, password } });
+            const result = await login({ variables: { email, password } })
             if (result.data?.login) {
-                Cookies.set('token', result.data.login, { expires: 1  });
-                router.push('/events');
+                Cookies.set('token', result.data.login, { expires: 1 })
+                router.push('/events')
             }
         } catch (err) {
-            let message = 'Invalid email or password.';
+            let message = 'Invalid email or password.'
             if (err instanceof Error) {
-                message = err.message ?? message;
+                message = err.message ?? message
             }
-            setError(message);
+            setError(message)
         }
-    };
+    }
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setError(null);
-        const formData = new FormData(e.currentTarget);
-        const email = formData.get('email') as string;
-        const password = formData.get('password') as string;
+        e.preventDefault()
+        setError(null)
+        const formData = new FormData(e.currentTarget)
+        const email = formData.get('email') as string
+        const password = formData.get('password') as string
 
         try {
-            const result = await register({ variables: { email, password } });
+            const result = await register({ variables: { email, password } })
             if (result.data?.register) {
-                setError('Please wait for user verification.');
+                setError('Please wait for user verification.')
             }
         } catch (err) {
-            let message = 'something went wrong.';
+            let message = 'something went wrong.'
             if (err instanceof Error) {
-                message = err.message ?? message;
+                message = err.message ?? message
             }
-            setError(message);
+            setError(message)
         }
-    };
+    }
 
     return (
         <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="flex items-center justify-center space-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-indigo-600" viewBox="0 0 20 20" fill="currentColor">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-10 w-10 text-indigo-600"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                    >
                         <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.428A1 1 0 0010 16.57l5.318.886a1 1 0 001.17-1.408l-7-14z" />
                     </svg>
                     <h1 className="text-3xl font-bold text-gray-800">Meal Planner</h1>
@@ -195,8 +207,8 @@ const LoginPage: React.FC = () => {
                         <div className="mt-6">
                             <button
                                 onClick={() => {
-                                    setIsLoginView(!isLoginView);
-                                    setError(null);
+                                    setIsLoginView(!isLoginView)
+                                    setError(null)
                                 }}
                                 className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
                             >
@@ -207,7 +219,7 @@ const LoginPage: React.FC = () => {
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default LoginPage;
+export default LoginPage

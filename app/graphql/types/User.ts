@@ -3,4 +3,4 @@ export const UserTypeDef = `
     uuid: ID!
     email: String!
   }
-`;
+`

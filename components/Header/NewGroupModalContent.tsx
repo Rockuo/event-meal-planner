@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
-import Button from '@/components/Button';
-import { useMutation } from '@apollo/client/react';
+import Button from '@/components/Button'
+import { useMutation } from '@apollo/client/react'
 import { gql } from '@/app/graphql/generated/gql'
 import GlobalLoader from '@/hooks/context/GlobalLoader'
 import { UserContext } from '@/hooks/context/HandledUserContext'
@@ -10,39 +10,37 @@ const CREATE_GROUP_MUTATION = gql(`
     mutation CreateGroup($name: String!) {
         createGroup(name: $name)
     }
-`);
+`)
 
 interface Props {
-    onClose: () => void;
+    onClose: () => void
 }
 
 export default function GroupForm({ onClose }: Props) {
-    const [name, setName] = useState('');
-    const [createGroup, { loading, error }] = useMutation(CREATE_GROUP_MUTATION);
-    const {setLoading} = useContext(GlobalLoader);
-    const {refresh: refreshUser} = useContext(UserContext)
-    const {setActiveGroup} = useContext(GroupContext)
-
+    const [name, setName] = useState('')
+    const [createGroup, { loading, error }] = useMutation(CREATE_GROUP_MUTATION)
+    const { setLoading } = useContext(GlobalLoader)
+    const { refresh: refreshUser } = useContext(UserContext)
+    const { setActiveGroup } = useContext(GroupContext)
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!name.trim()) return;
+        e.preventDefault()
+        if (!name.trim()) return
         try {
             setLoading(true)
-            const result = await createGroup({ variables: { name } });
-            if (!result?.data?.createGroup)
-            {
-                throw new Error('Create group failed');
+            const result = await createGroup({ variables: { name } })
+            if (!result?.data?.createGroup) {
+                throw new Error('Create group failed')
             }
 
-            await refreshUser();
-            setActiveGroup(result.data.createGroup);
-            setLoading(false);
-            onClose();
+            await refreshUser()
+            setActiveGroup(result.data.createGroup)
+            setLoading(false)
+            onClose()
         } catch (err) {
-            console.error(err);
+            console.error(err)
         }
-    };
+    }
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -67,5 +65,5 @@ export default function GroupForm({ onClose }: Props) {
                 </Button>
             </div>
         </form>
-    );
+    )
 }

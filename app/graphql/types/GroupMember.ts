@@ -8,4 +8,4 @@ export const GroupMemberTypeDef = `
     user: User!
     role: GroupRole!
   }
-`;
+`

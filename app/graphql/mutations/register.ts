@@ -4,8 +4,8 @@ export const register = {
     typeDef: `
         register(email: String!, password: String!): String
     `,
-    resolver: async (_: any, { email, password }: { email: string, password: string }) => {
+    resolver: async (_: unknown, { email, password }: { email: string; password: string }) => {
         await createUser(email, password)
-        return `User ${email} registered successfully.`;
-    }
-};
+        return `User ${email} registered successfully.`
+    },
+}
