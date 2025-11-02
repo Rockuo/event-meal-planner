@@ -1,0 +1,280 @@
+create table public.users
+(
+    email    varchar(64)  not null
+        constraint users_email_unique
+            unique,
+    password varchar(256) not null,
+    uuid     uuid default gen_random_uuid()
+        unique
+);
+
+alter table public.users
+    owner to neondb_owner;
+
+create table public.groups
+(
+    name text                           not null,
+    uuid uuid default gen_random_uuid() not null
+        primary key
+        unique
+);
+
+alter table public.groups
+    owner to neondb_owner;
+
+create table public.mn_users_groups
+(
+    user_uuid  uuid                                    not null
+        constraint mn_ug_user_fk
+            references public.users (uuid)
+            on delete cascade,
+    group_uuid uuid                                    not null
+        constraint mn_ug_group_fk
+            references public.groups
+            on delete cascade,
+    role       group_role default 'editor'::group_role not null,
+    constraint mn_ug_primary
+        primary key (user_uuid, group_uuid)
+);
+
+alter table public.mn_users_groups
+    owner to neondb_owner;
+
+create table public.ingredient_tags
+(
+    id   integer generated always as identity
+        primary key,
+    name varchar(32) not null
+);
+
+alter table public.ingredient_tags
+    owner to neondb_owner;
+
+create table public.meal_tags
+(
+    id   integer generated always as identity
+        primary key,
+    name varchar(32) not null
+);
+
+alter table public.meal_tags
+    owner to neondb_owner;
+
+create table public.meals
+(
+    id          integer generated always as identity
+        primary key,
+    name        varchar(128) not null,
+    description text,
+    guide       text
+);
+
+alter table public.meals
+    owner to neondb_owner;
+
+create table public.ingredients
+(
+    id           integer generated always as identity
+        primary key,
+    name         varchar(64) not null,
+    default_unit varchar(16)
+);
+
+alter table public.ingredients
+    owner to neondb_owner;
+
+create table public.mn_ingredients_tags
+(
+    ingredient_id     integer not null
+        constraint mn_it_i_fk
+            references public.ingredients
+            on delete cascade,
+    ingredient_tag_id integer not null
+        constraint mn_it_it_fk
+            references public.ingredient_tags
+            on delete cascade,
+    constraint mn_it_primary
+        primary key (ingredient_id, ingredient_tag_id)
+);
+
+alter table public.mn_ingredients_tags
+    owner to neondb_owner;
+
+create table public.mn_meals_tags
+(
+    meal_id     integer not null
+        constraint mn_mt_m_fk
+            references public.meals
+            on delete cascade,
+    meal_tag_id integer not null
+        constraint mn_mt_mt_fk
+            references public.meal_tags
+            on delete cascade,
+    constraint mn_mt_pk
+        primary key (meal_id, meal_tag_id)
+);
+
+alter table public.mn_meals_tags
+    owner to neondb_owner;
+
+create table public.mn_meals_groups
+(
+    meal_id    integer not null
+        constraint mn_mg_m_fk
+            references public.meals
+            on delete cascade,
+    group_uuid uuid    not null
+        constraint mn_mg_g_fk
+            references public.groups
+            on delete cascade,
+    constraint mn_mg_pk
+        primary key (meal_id, group_uuid)
+);
+
+alter table public.mn_meals_groups
+    owner to neondb_owner;
+
+create table public.events
+(
+    id         integer generated always as identity
+        primary key,
+    name       varchar(64) not null,
+    group_uuid uuid
+        constraint event_group_fk
+            references public.groups
+            on delete cascade
+);
+
+alter table public.events
+    owner to neondb_owner;
+
+create table public.days
+(
+    id       integer generated always as identity
+        constraint day_pkey
+            primary key,
+    name     varchar(32) not null,
+    "order"  smallint    not null,
+    event_id integer     not null
+        constraint day_event_fg
+            references public.events
+);
+
+alter table public.days
+    owner to neondb_owner;
+
+create table public.meals_in_day
+(
+    id      integer generated always as identity
+        primary key,
+    name    varchar(128) not null,
+    meal_id integer
+        constraint mid_m_fk
+            references public.meals,
+    count   smallint     not null,
+    day_id  integer
+        constraint mid_d_fk
+            references public.days,
+    "order" smallint     not null
+);
+
+alter table public.meals_in_day
+    owner to neondb_owner;
+
+create table public.mn_meal_tag_group
+(
+    meal_tag_id integer not null
+        constraint mtg_mt_fk
+            references public.meal_tags
+            on delete cascade,
+    group_uuid  uuid    not null
+        constraint mtg_g_fk
+            references public.groups
+            on delete cascade,
+    constraint mtg_pk
+        primary key (meal_tag_id, group_uuid)
+);
+
+alter table public.mn_meal_tag_group
+    owner to neondb_owner;
+
+create table public.mn_ingredients_groups
+(
+    ingredient_id integer not null
+        constraint ig_i_fk
+            references public.ingredients
+            on delete cascade,
+    group_uuid    uuid    not null
+        constraint ig_g_fk
+            references public.groups
+            on delete cascade,
+    constraint ig_ig_pk
+        primary key (ingredient_id, group_uuid)
+);
+
+alter table public.mn_ingredients_groups
+    owner to neondb_owner;
+
+create table public.mn_ingredients_tags_groups
+(
+    ingredient_tag_id integer not null
+        constraint itg_i_fk
+            references public.ingredient_tags
+            on delete cascade,
+    group_uuid        uuid    not null
+        constraint itg_g_fg
+            references public.groups
+            on delete cascade,
+    constraint itg_pk
+        primary key (ingredient_tag_id, group_uuid)
+);
+
+alter table public.mn_ingredients_tags_groups
+    owner to neondb_owner;
+
+create type public.group_role as enum ('admin', 'editor');
+
+alter type public.group_role owner to neondb_owner;
+
+create sequence public.ingredient_tags_id_seq;
+
+alter sequence public.ingredient_tags_id_seq owner to neondb_owner;
+
+alter sequence public.ingredient_tags_id_seq owned by public.ingredient_tags.id;
+
+create sequence public.meal_tags_id_seq;
+
+alter sequence public.meal_tags_id_seq owner to neondb_owner;
+
+alter sequence public.meal_tags_id_seq owned by public.meal_tags.id;
+
+create sequence public.meals_id_seq;
+
+alter sequence public.meals_id_seq owner to neondb_owner;
+
+alter sequence public.meals_id_seq owned by public.meals.id;
+
+create sequence public.ingredients_id_seq;
+
+alter sequence public.ingredients_id_seq owner to neondb_owner;
+
+alter sequence public.ingredients_id_seq owned by public.ingredients.id;
+
+create sequence public.events_id_seq;
+
+alter sequence public.events_id_seq owner to neondb_owner;
+
+alter sequence public.events_id_seq owned by public.events.id;
+
+create sequence public.day_id_seq;
+
+alter sequence public.day_id_seq owner to neondb_owner;
+
+alter sequence public.day_id_seq owned by public.days.id;
+
+create sequence public.meals_in_day_id_seq;
+
+alter sequence public.meals_in_day_id_seq owner to neondb_owner;
+
+alter sequence public.meals_in_day_id_seq owned by public.meals_in_day.id;
+

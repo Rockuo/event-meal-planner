@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext"
+  },
+  "include": [
+    "scripts/generate-schema.ts", "scripts/**/*.ts"]
+}

@@ -2,6 +2,8 @@
 import { TextEffect } from '@/components/ui/text-effect'
 import Link from 'next/link'
 
+//todo remove?
+
 export function Header() {
   return (
     <header className="mb-8 flex items-center justify-between">
@@ -16,7 +18,7 @@ export function Header() {
           className="text-zinc-600 dark:text-zinc-500"
           delay={0.5}
         >
-          Design Engineer
+          Event Meal Planner
         </TextEffect>
       </div>
     </header>

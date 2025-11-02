@@ -1,0 +1,36 @@
+type Group {
+  uuid: ID!
+  name: String!
+  members: [GroupMember!]!
+}
+
+type User {
+  uuid: ID!
+  email: String!
+}
+
+enum GroupRole {
+  admin
+  editor
+}
+
+type GroupMember {
+  user: User!
+  role: GroupRole!
+}
+
+type Query {
+  hello: String
+  group(uuid: ID!): Group
+  refreshCredentials: String
+}
+
+type Mutation {
+  login(email: String!, password: String!): String
+  register(email: String!, password: String!): String
+  createGroup(name: String!): String
+  changeGroupName(groupId: ID!, name: String!): Boolean
+  inviteUser(groupId: ID!, email: String!): String
+  revokeAccess(groupId: ID!, userId: ID!): Boolean
+  deleteGroup(groupId: ID!): Boolean
+}
