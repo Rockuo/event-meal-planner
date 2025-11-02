@@ -4,11 +4,6 @@ type Group {
   members: [GroupMember!]!
 }
 
-type User {
-  uuid: ID!
-  email: String!
-}
-
 enum GroupRole {
   admin
   editor
@@ -19,10 +14,28 @@ type GroupMember {
   role: GroupRole!
 }
 
+type User {
+  uuid: ID!
+  email: String!
+}
+
+type Ingredient {
+  id: Int!
+  name: String!
+  defaultUnit: String
+  tags: [IngredientTag!]!
+}
+
+type IngredientTag {
+  id: Int!
+  name: String!
+}
+
 type Query {
-  hello: String
   group(uuid: ID!): Group
   refreshCredentials: String
+  ingredients(groupUuid: ID!): [Ingredient!]!
+  ingredientTags(groupUuid: ID!): [IngredientTag!]!
 }
 
 type Mutation {
@@ -33,4 +46,10 @@ type Mutation {
   inviteUser(groupId: ID!, email: String!): String
   revokeAccess(groupId: ID!, userId: ID!): Boolean
   deleteGroup(groupId: ID!): Boolean
+  createIngredientTag(name: String!, groupUuid: ID!): Boolean!
+  createIngredient(name: String!, defaultUnit: String, tagIds: [Int!]!, groupUuid: ID!): Boolean!
+  deleteIngredientTag(id: Int!, groupUuid: ID!): Boolean!
+  deleteIngredient(id: Int!, groupUuid: ID!): Boolean!
+  updateIngredient(id: Int!, name: String, defaultUnit: String, tagIds: [Int!]!): Boolean!
+  updateIngredientTag(id: Int!, name: String!): Boolean!
 }

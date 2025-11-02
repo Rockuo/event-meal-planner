@@ -1,10 +1,10 @@
 export default interface LoggedInUser {
-    uuid: string
-    email: string
-    groups: LoggedInUserGroup[]
+    uuid: string;
+    email: string;
+    groups: LoggedInUserGroup[];
 }
 
 export interface LoggedInUserGroup {
-    uuid: string
-    name: string
+    uuid: string;
+    name: string;
 }

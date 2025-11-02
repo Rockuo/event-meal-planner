@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const PencilIcon: React.FC<{ className?: string }> = ({ className = 'h-5 w-5' }) => (
     <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 20 20" fill="currentColor">
@@ -9,6 +9,6 @@ const PencilIcon: React.FC<{ className?: string }> = ({ className = 'h-5 w-5' })
             clipRule="evenodd"
         />
     </svg>
-)
+);
 
-export default PencilIcon
+export default PencilIcon;
