@@ -3,3 +3,7 @@ export * from './GroupMember';
 export * from './User';
 export * from './Ingredient';
 export * from './IngredientTag';
+export * from './MealTag';
+export * from './MealIngredient';
+export * from './Meal';
+export * from './MealIngredientInput';

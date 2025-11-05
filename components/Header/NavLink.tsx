@@ -1,15 +1,15 @@
-import React from 'react'
+import React from 'react';
 
 interface Props {
-    page: string
-    currentPage: string
-    setCurrentPage: (page: string) => void
-    children: React.ReactNode
-    isMobile?: boolean
+    page: string;
+    currentPage: string;
+    setCurrentPage: (page: string) => void;
+    children: React.ReactNode;
+    isMobile?: boolean;
 }
 
 export default function NavLink({ page, currentPage, setCurrentPage, children, isMobile = false }: Props) {
-    const isActive = currentPage === page
+    const isActive = currentPage === page;
 
     return (
         <button
@@ -22,5 +22,5 @@ export default function NavLink({ page, currentPage, setCurrentPage, children, i
         >
             {children}
         </button>
-    )
+    );
 }

@@ -1,164 +1,164 @@
-'use client'
-import { useState, useEffect, useContext } from 'react'
-import Button from '@/components/Button'
-import TrashIcon from '@/components/icons/TrashIcon'
-import { GET_GROUP_QUERY, GroupContext } from '@/hooks/context/HandledGroupContext'
-import { UserContext } from '@/hooks/context/HandledUserContext'
-import { Group, GroupMember } from '@/app/graphql/generated/graphql'
-import { useMutation } from '@apollo/client/react'
-import { gql } from '@/app/graphql/generated'
-import GlobalLoader from '@/hooks/context/GlobalLoader'
+'use client';
+import { useState, useEffect, useContext } from 'react';
+import Button from '@/components/Button';
+import TrashIcon from '@/components/icons/TrashIcon';
+import { GET_GROUP_QUERY, GroupContext } from '@/hooks/context/HandledGroupContext';
+import { UserContext } from '@/hooks/context/HandledUserContext';
+import { Group, GroupMember } from '@/app/graphql/generated/graphql';
+import { useMutation } from '@apollo/client/react';
+import { gql } from '@/app/graphql/generated';
+import GlobalLoader from '@/hooks/context/GlobalLoader';
 
 const CHANGE_GROUP_NAME_MUTATION = gql(`
     mutation ChangeGroupName($groupId: ID!, $name: String!) {
         changeGroupName(groupId: $groupId, name: $name)
     }
-`)
+`);
 
 const INVITE_USER_MUTATION = gql(`
     mutation InviteUser($groupId: ID!, $email: String!) {
         inviteUser(groupId: $groupId, email: $email)
     }
-`)
+`);
 
 const REVOKE_ACCESS_MUTATION = gql(`
     mutation RevokeAccess($groupId: ID!, $userId: ID!) {
         revokeAccess(groupId: $groupId, userId: $userId)
     }
-`)
+`);
 
 const DELETE_GROUP_MUTATION = gql(`
     mutation DeleteGroup($groupId: ID!) {
         deleteGroup(groupId: $groupId)
     }
-`)
+`);
 
 export default function GroupManagementPage() {
-    const { activeGroup } = useContext(GroupContext)
-    const { user, refresh } = useContext(UserContext)
-    const { setLoading } = useContext(GlobalLoader)
+    const { activeGroup } = useContext(GroupContext);
+    const { user, refresh } = useContext(UserContext);
+    const { setLoading } = useContext(GlobalLoader);
 
-    const [groupName, setGroupName] = useState(activeGroup?.name || '')
-    const [members, setMembers] = useState<GroupMember[]>([])
-    const [inviteEmail, setInviteEmail] = useState('')
-    const [inviteError, setInviteError] = useState<string | null>(null)
-    const [inviteSuccess, setInviteSuccess] = useState<string | null>(null)
+    const [groupName, setGroupName] = useState(activeGroup?.name || '');
+    const [members, setMembers] = useState<GroupMember[]>([]);
+    const [inviteEmail, setInviteEmail] = useState('');
+    const [inviteError, setInviteError] = useState<string | null>(null);
+    const [inviteSuccess, setInviteSuccess] = useState<string | null>(null);
 
     const [changeGroupName, { loading: isChangingName, error: changeNameError }] = useMutation(
         CHANGE_GROUP_NAME_MUTATION,
         {
             refetchQueries: [GET_GROUP_QUERY],
         },
-    )
+    );
 
     const [inviteUser, { loading: isInvitingUser, error: inviteUserError }] = useMutation(INVITE_USER_MUTATION, {
         refetchQueries: [GET_GROUP_QUERY],
-    })
+    });
 
     const [revokeAccess, { loading: isRevokingAccess, error: revokeAccessError }] = useMutation(
         REVOKE_ACCESS_MUTATION,
         {
             refetchQueries: [GET_GROUP_QUERY],
         },
-    )
+    );
 
-    const [deleteGroup, { loading: isDeletingGroup, error: deleteGroupError }] = useMutation(DELETE_GROUP_MUTATION)
+    const [deleteGroup, { loading: isDeletingGroup, error: deleteGroupError }] = useMutation(DELETE_GROUP_MUTATION);
 
-    const isAdmin = activeGroup?.members.some((m) => m.user.uuid === user.uuid && m.role === 'admin')
+    const isAdmin = activeGroup?.members.some((m) => m.user.uuid === user.uuid && m.role === 'admin');
 
     useEffect(() => {
         if (activeGroup) {
-            setGroupName(activeGroup.name)
-            setMembers(activeGroup.members)
+            setGroupName(activeGroup.name);
+            setMembers(activeGroup.members);
         }
-    }, [activeGroup])
+    }, [activeGroup]);
 
     if (!activeGroup) {
-        return <div className="p-8 text-center">No active group selected.</div>
+        return <div className="p-8 text-center">No active group selected.</div>;
     }
 
     const handleNameChange = async (e: React.FormEvent) => {
-        e.preventDefault()
+        e.preventDefault();
         if (groupName.trim() && activeGroup) {
             try {
-                setLoading(true)
+                setLoading(true);
                 await changeGroupName({
                     variables: {
                         groupId: activeGroup.uuid,
                         name: groupName.trim(),
                     },
-                })
-                await refresh()
-                setLoading(false)
+                });
+                await refresh();
+                setLoading(false);
             } catch (error) {
-                console.error('Failed to change group name', error)
-                setLoading(false)
+                console.error('Failed to change group name', error);
+                setLoading(false);
             }
         }
-    }
+    };
 
     const handleInviteUser = async () => {
-        setInviteError(null)
-        setInviteSuccess(null)
+        setInviteError(null);
+        setInviteSuccess(null);
         if (!inviteEmail.trim() || !activeGroup) {
-            setInviteError('Email cannot be empty.')
-            return
+            setInviteError('Email cannot be empty.');
+            return;
         }
 
         try {
-            setLoading(true)
+            setLoading(true);
             const result = await inviteUser({
                 variables: {
                     groupId: activeGroup.uuid,
                     email: inviteEmail,
                 },
-            })
+            });
 
-            setLoading(false)
+            setLoading(false);
             if (result.data?.inviteUser === 'success') {
-                setInviteSuccess(`${inviteEmail} has been added to the group.`)
-                setInviteEmail('')
+                setInviteSuccess(`${inviteEmail} has been added to the group.`);
+                setInviteEmail('');
             } else if (result.data?.inviteUser === 'invalid_user') {
-                setInviteError('User with this email not found.')
+                setInviteError('User with this email not found.');
             }
         } catch (error) {
-            console.error('Failed to invite user', error)
-            setInviteError('An unexpected error occurred.')
+            console.error('Failed to invite user', error);
+            setInviteError('An unexpected error occurred.');
         }
-    }
+    };
 
     const handleRemoveMember = async (memberId: string) => {
-        if (!activeGroup) return
+        if (!activeGroup) return;
 
         try {
-            setLoading(true)
+            setLoading(true);
             await revokeAccess({
                 variables: {
                     groupId: activeGroup.uuid,
                     userId: memberId,
                 },
-            })
+            });
 
-            setLoading(false)
+            setLoading(false);
         } catch (error) {
-            console.error('Failed to remove member', error)
+            console.error('Failed to remove member', error);
         }
-    }
+    };
 
     const handleDeleteGroup = async (group: Group) => {
         if (!group || !window.confirm('Are you sure you want to delete this group? This action cannot be undone.'))
-            return
+            return;
 
         try {
-            setLoading(true)
-            await deleteGroup({ variables: { groupId: group.uuid } })
-            await refresh()
+            setLoading(true);
+            await deleteGroup({ variables: { groupId: group.uuid } });
+            await refresh();
             // No need to set loading to false, as the component will unmount or redirect
         } catch (error) {
-            console.error('Failed to delete group', error)
-            setLoading(false)
+            console.error('Failed to delete group', error);
+            setLoading(false);
         }
-    }
+    };
 
     return (
         <div className="space-y-8">
@@ -275,5 +275,5 @@ export default function GroupManagementPage() {
                 </div>
             )}
         </div>
-    )
+    );
 }

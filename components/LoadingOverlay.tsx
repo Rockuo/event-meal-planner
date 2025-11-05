@@ -1,12 +1,12 @@
-import { ReactNode, useState } from 'react'
-import GlobalLoader from '@/hooks/context/GlobalLoader'
+import { ReactNode, useState } from 'react';
+import GlobalLoader from '@/hooks/context/GlobalLoader';
 
 interface Props {
-    children: ReactNode
+    children: ReactNode;
 }
 
 export default function LoadingOverlay({ children }: Props) {
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
     return (
         <>
             {loading && (
@@ -16,5 +16,5 @@ export default function LoadingOverlay({ children }: Props) {
             )}
             <GlobalLoader value={{ loading, setLoading }}>{children}</GlobalLoader>
         </>
-    )
+    );
 }

@@ -31,11 +31,39 @@ type IngredientTag {
   name: String!
 }
 
+type MealTag {
+  id: Int!
+  name: String!
+}
+
+type MealIngredient {
+  ingredient: Ingredient!
+  count: Int!
+  unit: String
+}
+
+type Meal {
+  id: Int!
+  name: String!
+  description: String
+  guide: String
+  ingredients: [MealIngredient!]!
+  tags: [MealTag!]!
+}
+
+input MealIngredientInput {
+  ingredientId: Int!
+  count: Int!
+  unit: String
+}
+
 type Query {
   group(uuid: ID!): Group
   refreshCredentials: String
   ingredients(groupUuid: ID!): [Ingredient!]!
   ingredientTags(groupUuid: ID!): [IngredientTag!]!
+  meals(groupUuid: ID!): [Meal!]!
+  mealTags(groupUuid: ID!): [MealTag!]!
 }
 
 type Mutation {
@@ -52,4 +80,10 @@ type Mutation {
   deleteIngredient(id: Int!, groupUuid: ID!): Boolean!
   updateIngredient(id: Int!, name: String, defaultUnit: String, tagIds: [Int!]!): Boolean!
   updateIngredientTag(id: Int!, name: String!): Boolean!
+  createMealTag(name: String!, groupUuid: ID!): Boolean!
+  updateMealTag(id: Int!, name: String!): Boolean!
+  deleteMealTag(id: Int!, groupUuid: ID!): Boolean!
+  createMeal(name: String!, description: String, guide: String, ingredients: [MealIngredientInput!]!, tagIds: [Int!]!, groupUuid: ID!): Boolean!
+  updateMeal(id: Int!, name: String, description: String, guide: String, ingredients: [MealIngredientInput!]!, tagIds: [Int!]!): Boolean!
+  deleteMeal(id: Int!, groupUuid: ID!): Boolean!
 }

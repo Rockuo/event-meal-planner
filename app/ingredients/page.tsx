@@ -11,20 +11,7 @@ import { useQuery, useMutation } from '@apollo/client/react';
 import { gql } from '@/app/graphql/generated';
 import { GroupContext } from '@/hooks/context/HandledGroupContext';
 import GlobalLoader from '@/hooks/context/GlobalLoader';
-
-const INGREDIENTS_QUERY = gql(`
-    query Ingredients($groupUuid: ID!) {
-        ingredients(groupUuid: $groupUuid) {
-            id
-            name
-            defaultUnit
-            tags {
-                id
-                name
-            }
-        }
-    }
-`);
+import { INGREDIENTS_QUERY, useIngredientsQuery } from '@/hooks/api/ingredients';
 
 const INGREDIENT_TAGS_QUERY = gql(`
     query IngredientTags($groupUuid: ID!) {
@@ -222,7 +209,6 @@ function IngredientForm({ onClose, ingredient, ingredientTags, groupUuid, refetc
                         name,
                         defaultUnit: defaultUnit || null,
                         tagIds: selectedTagIds,
-                        // groupUuid is removed as it's handled by resolver's internal check
                     },
                 });
             } else {
@@ -351,7 +337,6 @@ const IngredientTagForm: React.FC<IngredientTagFormProps> = ({
                     variables: {
                         id: tagToEdit.id,
                         name,
-                        // groupUuid is removed as it's handled by resolver's internal check
                     },
                 });
             } else {
@@ -400,10 +385,7 @@ const IngredientsPage: React.FC = () => {
         loading: loadingIngredients,
         error: ingredientsError,
         refetch: refetchIngredients,
-    } = useQuery(INGREDIENTS_QUERY, {
-        variables: { groupUuid: activeGroup?.uuid || '' },
-        skip: !activeGroup?.uuid,
-    });
+    } = useIngredientsQuery();
 
     const {
         data: ingredientTagsData,
@@ -417,6 +399,10 @@ const IngredientsPage: React.FC = () => {
 
     const [deleteIngredient, { loading: deletingIngredient }] = useMutation(DELETE_INGREDIENT_MUTATION, {
         refetchQueries: [INGREDIENTS_QUERY],
+        update(cache) {
+            cache.evict({ fieldName: 'meals' });
+            cache.gc();
+        },
         onCompleted: () => {
             setLoading(false);
             refetchIngredients();

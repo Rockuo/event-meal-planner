@@ -1,5 +1,5 @@
-import * as queries from './queries'
-import * as mutations from './mutations'
+import * as queries from './queries';
+import * as mutations from './mutations';
 
 const queryResolvers = Object.entries(queries).reduce(
     (
@@ -7,15 +7,15 @@ const queryResolvers = Object.entries(queries).reduce(
         [name, query]: [
             string,
             {
-                resolver: unknown
+                resolver: unknown;
             },
         ],
     ) => {
-        acc[name] = query.resolver
-        return acc
+        acc[name] = query.resolver;
+        return acc;
     },
     {},
-)
+);
 
 const mutationResolvers = Object.entries(mutations).reduce(
     (
@@ -23,17 +23,17 @@ const mutationResolvers = Object.entries(mutations).reduce(
         [name, mutation]: [
             string,
             {
-                resolver: unknown
+                resolver: unknown;
             },
         ],
     ) => {
-        acc[name] = mutation.resolver
-        return acc
+        acc[name] = mutation.resolver;
+        return acc;
     },
     {},
-)
+);
 
 export const resolvers = {
     Query: queryResolvers,
     Mutation: mutationResolvers,
-}
+};

@@ -1,5 +1,5 @@
-'use client'
+'use client';
 
 export default function Personal() {
-    return <>NOTHING HERE</>
+    return <>NOTHING HERE</>;
 }

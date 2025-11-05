@@ -18,7 +18,6 @@ type Documents = {
     "\n    mutation InviteUser($groupId: ID!, $email: String!) {\n        inviteUser(groupId: $groupId, email: $email)\n    }\n": typeof types.InviteUserDocument,
     "\n    mutation RevokeAccess($groupId: ID!, $userId: ID!) {\n        revokeAccess(groupId: $groupId, userId: $userId)\n    }\n": typeof types.RevokeAccessDocument,
     "\n    mutation DeleteGroup($groupId: ID!) {\n        deleteGroup(groupId: $groupId)\n    }\n": typeof types.DeleteGroupDocument,
-    "\n    query Ingredients($groupUuid: ID!) {\n        ingredients(groupUuid: $groupUuid) {\n            id\n            name\n            defaultUnit\n            tags {\n                id\n                name\n            }\n        }\n    }\n": typeof types.IngredientsDocument,
     "\n    query IngredientTags($groupUuid: ID!) {\n        ingredientTags(groupUuid: $groupUuid) {\n            id\n            name\n        }\n    }\n": typeof types.IngredientTagsDocument,
     "\n    mutation CreateIngredient($name: String!, $defaultUnit: String, $tagIds: [Int!]!, $groupUuid: ID!) {\n        createIngredient(name: $name, defaultUnit: $defaultUnit, tagIds: $tagIds, groupUuid: $groupUuid)\n    }\n": typeof types.CreateIngredientDocument,
     "\n    mutation UpdateIngredient($id: Int!, $name: String, $defaultUnit: String, $tagIds: [Int!]!) {\n        updateIngredient(id: $id, name: $name, defaultUnit: $defaultUnit, tagIds: $tagIds)\n    }\n": typeof types.UpdateIngredientDocument,
@@ -28,7 +27,16 @@ type Documents = {
     "\n    mutation DeleteIngredientTag($id: Int!, $groupUuid: ID!) {\n        deleteIngredientTag(id: $id, groupUuid: $groupUuid)\n    }\n": typeof types.DeleteIngredientTagDocument,
     "\n    mutation Login($password: String!, $email: String!) {\n        login(password: $password, email: $email)\n    }\n": typeof types.LoginDocument,
     "\n    mutation Register($password: String!, $email: String!) {\n        register(password: $password, email: $email)\n    }\n": typeof types.RegisterDocument,
+    "\n    query Meals($groupUuid: ID!) {\n        meals(groupUuid: $groupUuid) {\n            id\n            name\n            description\n            guide\n            ingredients {\n                ingredient {\n                    id\n                    name\n                    defaultUnit\n                }\n                count\n                unit\n            }\n            tags {\n                id\n                name\n            }\n        }\n    }\n": typeof types.MealsDocument,
+    "\n    query MealTags($groupUuid: ID!) {\n        mealTags(groupUuid: $groupUuid) {\n            id\n            name\n        }\n    }\n": typeof types.MealTagsDocument,
+    "\n    mutation CreateMeal($name: String!, $description: String, $guide: String, $ingredients: [MealIngredientInput!]!, $tagIds: [Int!]!, $groupUuid: ID!) {\n        createMeal(name: $name, description: $description, guide: $guide, ingredients: $ingredients, tagIds: $tagIds, groupUuid: $groupUuid)\n    }\n": typeof types.CreateMealDocument,
+    "\n    mutation UpdateMeal($id: Int!, $name: String, $description: String, $guide: String, $ingredients: [MealIngredientInput!]!, $tagIds: [Int!]!) {\n        updateMeal(id: $id, name: $name, description: $description, guide: $guide, ingredients: $ingredients, tagIds: $tagIds)\n    }\n": typeof types.UpdateMealDocument,
+    "\n    mutation DeleteMeal($id: Int!, $groupUuid: ID!) {\n        deleteMeal(id: $id, groupUuid: $groupUuid)\n    }\n": typeof types.DeleteMealDocument,
+    "\n    mutation CreateMealTag($name: String!, $groupUuid: ID!) {\n        createMealTag(name: $name, groupUuid: $groupUuid)\n    }\n": typeof types.CreateMealTagDocument,
+    "\n    mutation UpdateMealTag($id: Int!, $name: String!) {\n        updateMealTag(id: $id, name: $name)\n    }\n": typeof types.UpdateMealTagDocument,
+    "\n    mutation DeleteMealTag($id: Int!, $groupUuid: ID!) {\n        deleteMealTag(id: $id, groupUuid: $groupUuid)\n    }\n": typeof types.DeleteMealTagDocument,
     "\n    mutation CreateGroup($name: String!) {\n        createGroup(name: $name)\n    }\n": typeof types.CreateGroupDocument,
+    "\n    query Ingredients($groupUuid: ID!) {\n        ingredients(groupUuid: $groupUuid) {\n            id\n            name\n            defaultUnit\n            tags {\n                id\n                name\n            }\n        }\n    }\n": typeof types.IngredientsDocument,
     "\n    query GetGroup($uuid: ID!) {\n        group(uuid: $uuid) {\n            uuid\n            name\n            members {\n                user {\n                    uuid\n                    email\n                }\n                role\n            }\n        }\n    }\n": typeof types.GetGroupDocument,
     "\n    query RefreshCredentials {\n        refreshCredentials\n    }\n": typeof types.RefreshCredentialsDocument,
 };
@@ -37,7 +45,6 @@ const documents: Documents = {
     "\n    mutation InviteUser($groupId: ID!, $email: String!) {\n        inviteUser(groupId: $groupId, email: $email)\n    }\n": types.InviteUserDocument,
     "\n    mutation RevokeAccess($groupId: ID!, $userId: ID!) {\n        revokeAccess(groupId: $groupId, userId: $userId)\n    }\n": types.RevokeAccessDocument,
     "\n    mutation DeleteGroup($groupId: ID!) {\n        deleteGroup(groupId: $groupId)\n    }\n": types.DeleteGroupDocument,
-    "\n    query Ingredients($groupUuid: ID!) {\n        ingredients(groupUuid: $groupUuid) {\n            id\n            name\n            defaultUnit\n            tags {\n                id\n                name\n            }\n        }\n    }\n": types.IngredientsDocument,
     "\n    query IngredientTags($groupUuid: ID!) {\n        ingredientTags(groupUuid: $groupUuid) {\n            id\n            name\n        }\n    }\n": types.IngredientTagsDocument,
     "\n    mutation CreateIngredient($name: String!, $defaultUnit: String, $tagIds: [Int!]!, $groupUuid: ID!) {\n        createIngredient(name: $name, defaultUnit: $defaultUnit, tagIds: $tagIds, groupUuid: $groupUuid)\n    }\n": types.CreateIngredientDocument,
     "\n    mutation UpdateIngredient($id: Int!, $name: String, $defaultUnit: String, $tagIds: [Int!]!) {\n        updateIngredient(id: $id, name: $name, defaultUnit: $defaultUnit, tagIds: $tagIds)\n    }\n": types.UpdateIngredientDocument,
@@ -47,7 +54,16 @@ const documents: Documents = {
     "\n    mutation DeleteIngredientTag($id: Int!, $groupUuid: ID!) {\n        deleteIngredientTag(id: $id, groupUuid: $groupUuid)\n    }\n": types.DeleteIngredientTagDocument,
     "\n    mutation Login($password: String!, $email: String!) {\n        login(password: $password, email: $email)\n    }\n": types.LoginDocument,
     "\n    mutation Register($password: String!, $email: String!) {\n        register(password: $password, email: $email)\n    }\n": types.RegisterDocument,
+    "\n    query Meals($groupUuid: ID!) {\n        meals(groupUuid: $groupUuid) {\n            id\n            name\n            description\n            guide\n            ingredients {\n                ingredient {\n                    id\n                    name\n                    defaultUnit\n                }\n                count\n                unit\n            }\n            tags {\n                id\n                name\n            }\n        }\n    }\n": types.MealsDocument,
+    "\n    query MealTags($groupUuid: ID!) {\n        mealTags(groupUuid: $groupUuid) {\n            id\n            name\n        }\n    }\n": types.MealTagsDocument,
+    "\n    mutation CreateMeal($name: String!, $description: String, $guide: String, $ingredients: [MealIngredientInput!]!, $tagIds: [Int!]!, $groupUuid: ID!) {\n        createMeal(name: $name, description: $description, guide: $guide, ingredients: $ingredients, tagIds: $tagIds, groupUuid: $groupUuid)\n    }\n": types.CreateMealDocument,
+    "\n    mutation UpdateMeal($id: Int!, $name: String, $description: String, $guide: String, $ingredients: [MealIngredientInput!]!, $tagIds: [Int!]!) {\n        updateMeal(id: $id, name: $name, description: $description, guide: $guide, ingredients: $ingredients, tagIds: $tagIds)\n    }\n": types.UpdateMealDocument,
+    "\n    mutation DeleteMeal($id: Int!, $groupUuid: ID!) {\n        deleteMeal(id: $id, groupUuid: $groupUuid)\n    }\n": types.DeleteMealDocument,
+    "\n    mutation CreateMealTag($name: String!, $groupUuid: ID!) {\n        createMealTag(name: $name, groupUuid: $groupUuid)\n    }\n": types.CreateMealTagDocument,
+    "\n    mutation UpdateMealTag($id: Int!, $name: String!) {\n        updateMealTag(id: $id, name: $name)\n    }\n": types.UpdateMealTagDocument,
+    "\n    mutation DeleteMealTag($id: Int!, $groupUuid: ID!) {\n        deleteMealTag(id: $id, groupUuid: $groupUuid)\n    }\n": types.DeleteMealTagDocument,
     "\n    mutation CreateGroup($name: String!) {\n        createGroup(name: $name)\n    }\n": types.CreateGroupDocument,
+    "\n    query Ingredients($groupUuid: ID!) {\n        ingredients(groupUuid: $groupUuid) {\n            id\n            name\n            defaultUnit\n            tags {\n                id\n                name\n            }\n        }\n    }\n": types.IngredientsDocument,
     "\n    query GetGroup($uuid: ID!) {\n        group(uuid: $uuid) {\n            uuid\n            name\n            members {\n                user {\n                    uuid\n                    email\n                }\n                role\n            }\n        }\n    }\n": types.GetGroupDocument,
     "\n    query RefreshCredentials {\n        refreshCredentials\n    }\n": types.RefreshCredentialsDocument,
 };
@@ -82,10 +98,6 @@ export function gql(source: "\n    mutation RevokeAccess($groupId: ID!, $userId:
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n    mutation DeleteGroup($groupId: ID!) {\n        deleteGroup(groupId: $groupId)\n    }\n"): (typeof documents)["\n    mutation DeleteGroup($groupId: ID!) {\n        deleteGroup(groupId: $groupId)\n    }\n"];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(source: "\n    query Ingredients($groupUuid: ID!) {\n        ingredients(groupUuid: $groupUuid) {\n            id\n            name\n            defaultUnit\n            tags {\n                id\n                name\n            }\n        }\n    }\n"): (typeof documents)["\n    query Ingredients($groupUuid: ID!) {\n        ingredients(groupUuid: $groupUuid) {\n            id\n            name\n            defaultUnit\n            tags {\n                id\n                name\n            }\n        }\n    }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -125,7 +137,43 @@ export function gql(source: "\n    mutation Register($password: String!, $email:
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function gql(source: "\n    query Meals($groupUuid: ID!) {\n        meals(groupUuid: $groupUuid) {\n            id\n            name\n            description\n            guide\n            ingredients {\n                ingredient {\n                    id\n                    name\n                    defaultUnit\n                }\n                count\n                unit\n            }\n            tags {\n                id\n                name\n            }\n        }\n    }\n"): (typeof documents)["\n    query Meals($groupUuid: ID!) {\n        meals(groupUuid: $groupUuid) {\n            id\n            name\n            description\n            guide\n            ingredients {\n                ingredient {\n                    id\n                    name\n                    defaultUnit\n                }\n                count\n                unit\n            }\n            tags {\n                id\n                name\n            }\n        }\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    query MealTags($groupUuid: ID!) {\n        mealTags(groupUuid: $groupUuid) {\n            id\n            name\n        }\n    }\n"): (typeof documents)["\n    query MealTags($groupUuid: ID!) {\n        mealTags(groupUuid: $groupUuid) {\n            id\n            name\n        }\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    mutation CreateMeal($name: String!, $description: String, $guide: String, $ingredients: [MealIngredientInput!]!, $tagIds: [Int!]!, $groupUuid: ID!) {\n        createMeal(name: $name, description: $description, guide: $guide, ingredients: $ingredients, tagIds: $tagIds, groupUuid: $groupUuid)\n    }\n"): (typeof documents)["\n    mutation CreateMeal($name: String!, $description: String, $guide: String, $ingredients: [MealIngredientInput!]!, $tagIds: [Int!]!, $groupUuid: ID!) {\n        createMeal(name: $name, description: $description, guide: $guide, ingredients: $ingredients, tagIds: $tagIds, groupUuid: $groupUuid)\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    mutation UpdateMeal($id: Int!, $name: String, $description: String, $guide: String, $ingredients: [MealIngredientInput!]!, $tagIds: [Int!]!) {\n        updateMeal(id: $id, name: $name, description: $description, guide: $guide, ingredients: $ingredients, tagIds: $tagIds)\n    }\n"): (typeof documents)["\n    mutation UpdateMeal($id: Int!, $name: String, $description: String, $guide: String, $ingredients: [MealIngredientInput!]!, $tagIds: [Int!]!) {\n        updateMeal(id: $id, name: $name, description: $description, guide: $guide, ingredients: $ingredients, tagIds: $tagIds)\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    mutation DeleteMeal($id: Int!, $groupUuid: ID!) {\n        deleteMeal(id: $id, groupUuid: $groupUuid)\n    }\n"): (typeof documents)["\n    mutation DeleteMeal($id: Int!, $groupUuid: ID!) {\n        deleteMeal(id: $id, groupUuid: $groupUuid)\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    mutation CreateMealTag($name: String!, $groupUuid: ID!) {\n        createMealTag(name: $name, groupUuid: $groupUuid)\n    }\n"): (typeof documents)["\n    mutation CreateMealTag($name: String!, $groupUuid: ID!) {\n        createMealTag(name: $name, groupUuid: $groupUuid)\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    mutation UpdateMealTag($id: Int!, $name: String!) {\n        updateMealTag(id: $id, name: $name)\n    }\n"): (typeof documents)["\n    mutation UpdateMealTag($id: Int!, $name: String!) {\n        updateMealTag(id: $id, name: $name)\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    mutation DeleteMealTag($id: Int!, $groupUuid: ID!) {\n        deleteMealTag(id: $id, groupUuid: $groupUuid)\n    }\n"): (typeof documents)["\n    mutation DeleteMealTag($id: Int!, $groupUuid: ID!) {\n        deleteMealTag(id: $id, groupUuid: $groupUuid)\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(source: "\n    mutation CreateGroup($name: String!) {\n        createGroup(name: $name)\n    }\n"): (typeof documents)["\n    mutation CreateGroup($name: String!) {\n        createGroup(name: $name)\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    query Ingredients($groupUuid: ID!) {\n        ingredients(groupUuid: $groupUuid) {\n            id\n            name\n            defaultUnit\n            tags {\n                id\n                name\n            }\n        }\n    }\n"): (typeof documents)["\n    query Ingredients($groupUuid: ID!) {\n        ingredients(groupUuid: $groupUuid) {\n            id\n            name\n            defaultUnit\n            tags {\n                id\n                name\n            }\n        }\n    }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

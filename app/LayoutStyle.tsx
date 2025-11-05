@@ -1,19 +1,19 @@
-'use client'
+'use client';
 
-import { ReactNode } from 'react'
-import { usePathname } from 'next/navigation'
-import LoadingOverlay from '@/components/LoadingOverlay'
-import Header from '@/components/Header/Header'
-import HandledGroupContext from '@/hooks/context/HandledGroupContext'
+import { ReactNode } from 'react';
+import { usePathname } from 'next/navigation';
+import LoadingOverlay from '@/components/LoadingOverlay';
+import Header from '@/components/Header/Header';
+import HandledGroupContext from '@/hooks/context/HandledGroupContext';
 
 interface Props {
-    children: ReactNode
+    children: ReactNode;
 }
 
 export default function LayoutStyle({ children }: Props) {
-    const path = usePathname()
+    const path = usePathname();
     if (path === '/login') {
-        return children
+        return children;
     }
 
     return (
@@ -25,5 +25,5 @@ export default function LayoutStyle({ children }: Props) {
                 </HandledGroupContext>
             </LoadingOverlay>
         </div>
-    )
+    );
 }

@@ -1,72 +1,72 @@
-'use client'
-import React, { useState, useRef, useEffect, useContext } from 'react'
-import Button from '../Button'
-import Modal from '../Modal'
-import UsersIcon from '../icons/UsersIcon'
-import ChevronDownIcon from '../icons/ChevronDownIcon'
-import CheckIcon from '../icons/CheckIcon'
-import PlusIcon from '../icons/PlusIcon'
-import MenuIcon from '../icons/MenuIcon'
-import { usePathname, useRouter } from 'next/navigation'
-import { pageNames, pages } from '@/app/pages'
-import { GroupContext } from '@/hooks/context/HandledGroupContext'
-import { UserContext } from '@/hooks/context/HandledUserContext'
-import Cookies from 'js-cookie'
-import GlobalLoader from '@/hooks/context/GlobalLoader'
-import GroupForm from '@/components/Header/NewGroupModalContent'
-import NavLink from '@/components/Header/NavLink'
+'use client';
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import Button from '../Button';
+import Modal from '../Modal';
+import UsersIcon from '../icons/UsersIcon';
+import ChevronDownIcon from '../icons/ChevronDownIcon';
+import CheckIcon from '../icons/CheckIcon';
+import PlusIcon from '../icons/PlusIcon';
+import MenuIcon from '../icons/MenuIcon';
+import { usePathname, useRouter } from 'next/navigation';
+import { pageNames, pages } from '@/app/pages';
+import { GroupContext } from '@/hooks/context/HandledGroupContext';
+import { UserContext } from '@/hooks/context/HandledUserContext';
+import Cookies from 'js-cookie';
+import GlobalLoader from '@/hooks/context/GlobalLoader';
+import GroupForm from '@/components/Header/NewGroupModalContent';
+import NavLink from '@/components/Header/NavLink';
 
 export default function Header() {
-    const { activeGroup, setActiveGroup } = useContext(GroupContext)
+    const { activeGroup, setActiveGroup } = useContext(GroupContext);
     const {
         user: { groups },
-    } = useContext(UserContext)
-    const { user } = useContext(UserContext)
+    } = useContext(UserContext);
+    const { user } = useContext(UserContext);
 
-    const [isGroupSwitcherOpen, setIsGroupSwitcherOpen] = useState(false)
-    const [isNewGroupModalOpen, setIsNewGroupModalOpen] = useState(false)
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-    const switcherRef = useRef<HTMLDivElement>(null)
-    const headerRef = useRef<HTMLElement>(null)
-    const { setLoading } = useContext(GlobalLoader)
+    const [isGroupSwitcherOpen, setIsGroupSwitcherOpen] = useState(false);
+    const [isNewGroupModalOpen, setIsNewGroupModalOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const switcherRef = useRef<HTMLDivElement>(null);
+    const headerRef = useRef<HTMLElement>(null);
+    const { setLoading } = useContext(GlobalLoader);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (switcherRef.current && !switcherRef.current.contains(event.target as Node)) {
-                setIsGroupSwitcherOpen(false)
+                setIsGroupSwitcherOpen(false);
             }
             if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
-                setIsMobileMenuOpen(false)
+                setIsMobileMenuOpen(false);
             }
-        }
-        document.addEventListener('mousedown', handleClickOutside)
-        return () => document.removeEventListener('mousedown', handleClickOutside)
-    }, [])
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const handleGroupSelect = (uuid: string) => {
-        setActiveGroup(uuid)
-        setIsGroupSwitcherOpen(false)
-    }
+        setActiveGroup(uuid);
+        setIsGroupSwitcherOpen(false);
+    };
 
     const handleNewGroupClick = () => {
-        setIsGroupSwitcherOpen(false)
-        setIsNewGroupModalOpen(true)
-    }
+        setIsGroupSwitcherOpen(false);
+        setIsNewGroupModalOpen(true);
+    };
 
-    const router = useRouter()
-    const currentPage = usePathname()
+    const router = useRouter();
+    const currentPage = usePathname();
 
     const handleNavClick = (page: string) => {
-        router.push(page)
-        setIsMobileMenuOpen(false)
-    }
+        router.push(page);
+        setIsMobileMenuOpen(false);
+    };
 
     const handleLogout = () => {
-        setIsMobileMenuOpen(false)
-        setLoading(true)
-        Cookies.remove('token')
-        router.push('/login')
-    }
+        setIsMobileMenuOpen(false);
+        setLoading(true);
+        Cookies.remove('token');
+        router.push('/login');
+    };
 
     const NavBar = () => (
         <>
@@ -75,10 +75,10 @@ export default function Header() {
                     <NavLink key={page} page={page} currentPage={currentPage} setCurrentPage={handleNavClick}>
                         {pageNames[page]}
                     </NavLink>
-                )
+                );
             })}
         </>
-    )
+    );
 
     return (
         <header className="bg-white shadow-sm" ref={headerRef}>
@@ -190,5 +190,5 @@ export default function Header() {
                 <GroupForm onClose={() => setIsNewGroupModalOpen(false)} />
             </Modal>
         </header>
-    )
+    );
 }

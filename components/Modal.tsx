@@ -1,23 +1,23 @@
-import React, { ReactNode } from 'react'
-import XIcon from './icons/XIcon'
+import React, { ReactNode } from 'react';
+import XIcon from './icons/XIcon';
 
 interface ModalProps {
-    isOpen: boolean
-    onClose: () => void
-    title: string
-    children: ReactNode
-    size?: 'sm' | 'md' | 'lg' | 'xl'
+    isOpen: boolean;
+    onClose: () => void;
+    title: string;
+    children: ReactNode;
+    size?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, size = 'md' }) => {
-    if (!isOpen) return null
+    if (!isOpen) return null;
 
     const sizeClasses = {
         sm: 'max-w-sm',
         md: 'max-w-md',
         lg: 'max-w-lg',
         xl: 'max-w-xl',
-    }
+    };
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
@@ -34,7 +34,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, size = 
                 <div className="max-h-[70vh] overflow-y-auto p-6">{children}</div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Modal
+export default Modal;

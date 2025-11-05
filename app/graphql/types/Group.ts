@@ -4,4 +4,4 @@ export const GroupTypeDef = `
     name: String!
     members: [GroupMember!]!
   }
-`
+`;

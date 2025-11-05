@@ -1,1 +1,1 @@
-export const UniqueViolation = '23505'
+export const UniqueViolation = '23505';
